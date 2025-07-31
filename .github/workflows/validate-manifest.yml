@@ -1,0 +1,12 @@
+- name: Extract schema URL
+  id: get_schema
+  runs: |
+    echo "::set-output name=url::$(jq -r .\"$schema\" .hornet/cad_manifest.json)"
+
+- name: Validate manifest
+  uses: sourcemeta/jsonschema@v9
+  with:
+    command: validate
+    args: >
+      --schema ${{ steps.get_schema.outputs.url }}
+      --instance .hornet/cad_manifest.json
